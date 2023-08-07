@@ -1,33 +1,11 @@
 import { useState } from 'react'
 
-/*const Statistics = ({good, neutral, bad, total, avg, positive}) => {
-  console.log(good, neutral, bad, total, avg, positive)
-
-  if (good === 0 && neutral === 0 && bad === 0) {
-    return (
-      <div>
-        <p>No feedback given</p>
-      </div>
-    )
-  }
-
-  return (
-    <div>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>Total: {total}</p>
-      <p>Average: {avg}</p>
-      <p>Positive: {positive} %</p>
-    </div>
-  )
-}*/
-
 const StatisticLine = (props) => {
   return (
-    <div>
-      <p>{props.text} {props.value}</p>
-    </div>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
   )
 }
 
@@ -107,6 +85,20 @@ const App = () => {
     setPositive(newPositive)
   }
 
+  if (good === 0 && neutral === 0 && bad === 0) {
+    return (
+      <div>
+        <Header name="Give us feedback" />
+        <Button handleClick={giveGoodFeedback} text="good" />
+        <Button handleClick={giveNeutralFeedback} text="neutral" />
+        <Button handleClick={giveBadFeedback} text="bad" />
+        <Header name="Statistics" />
+        <p>No feedback given</p>
+      </div>
+    )
+
+  }
+
   return (
     <div>
       <Header name="Give us feedback" />
@@ -114,17 +106,18 @@ const App = () => {
       <Button handleClick={giveNeutralFeedback} text="neutral" />
       <Button handleClick={giveBadFeedback} text="bad" />
       <Header name="Statistics" />
-      <StatisticLine text="Good:" value={good} />
-      <StatisticLine text="Neutral:" value={neutral} />
-      <StatisticLine text="Bad:" value={bad} />
-      <StatisticLine text="Total:" value={total} />
-      <StatisticLine text="Average:" value={average} />
-      <StatisticLine text="Positive:" value={positive} />
+      <table>
+        <tbody>
+          <StatisticLine text="Good:" value={good} />
+          <StatisticLine text="Neutral:" value={neutral} />
+          <StatisticLine text="Bad:" value={bad} />
+          <StatisticLine text="Total:" value={total} />
+          <StatisticLine text="Average:" value={average} />
+          <StatisticLine text="Positive:" value={positive + ' %'} />
+        </tbody>
+      </table>
     </div>
   )
 }
 
 export default App
-
-//TODO 1: Korjaa ohjelma niin, että se osaa tulostaa "No feedback given" jos palautetta ei ole vielä annettu
-//TODO 2: Korjaa StatisticLine siten, että se osaa tulostaa prosenttimerkin (%) positive:n kohdalle
