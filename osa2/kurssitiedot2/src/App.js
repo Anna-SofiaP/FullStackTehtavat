@@ -1,64 +1,54 @@
-const Parts = ({ key, name, exercises}) => {
-  return (
-    <>
-      <p></p>
-    </>
-  )
-}
-
-const Content = ({ parts }) => {
-  return (
-    <>
-      {parts.map(part => <Parts key={part.id} name={part.name} exercises={part.exercises}/>)}
-    </>
-  )
-}
-
-//<p key={part.id}>{part.name} {part.exercises}</p>
-
-const Header = (props) => {
-  return (
-    <>
-      <h1>{props.header}</h1>
-    </>
-  )
-}
-
-const Course = ({ course }) => {
-  return (
-    <>
-      <Header header={course.name} />
-      <Content parts={course.parts} />
-    </>
-  )
-}
+import Courses from './components/Courses'
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    id: 1,
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10,
-        id: 1
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7,
-        id: 2
-      },
-      {
-        name: 'State of a component',
-        exercises: 14,
-        id: 3
-      }
-    ]
-  }
+  const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    }, 
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
   return (
     <div>
-      <Course course={course} />
+      <Courses courses={courses} />
     </div>
   )
 }
