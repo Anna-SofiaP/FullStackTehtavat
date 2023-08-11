@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Display = ({ name, number }) => {
+const Person = ({ name, number }) => {
   return (
     <>
       <p>{name} {number}</p>
@@ -8,20 +8,34 @@ const Display = ({ name, number }) => {
   )
 }
 
-const Content = ({ persons, filter }) => {
-  const filteredList = persons.filter(person =>
-  person.name.toLowerCase.includes(filter.toLowerCase) || person.number.includes(filter))
-
-  if (filter === '') {
-    return (
-      <>
-        {persons.map(person => <Display key={person.name} name={person.name} number={person.number}/> )}
-      </>
-    )
-  }
+const Persons = ({ personsList }) => {
   return (
     <>
+      {personsList.map(person => <Person key={person.name} name={person.name} number={person.number}/> )}
+    </>
+  )
+}
 
+const Search = ({ filter, handleNameFiltering }) => {
+  return (
+    <>
+      <form>
+        <div> search: <input value={filter} onChange={handleNameFiltering}/></div>
+      </form>
+    </>
+  )
+}
+
+const PersonForm = ({ handleSubmit, name, handleNameChange, number, handleNumberChange}) => {
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <div> name: <input value={name} onChange={handleNameChange}/></div>
+        <div> number: <input value={number} onChange={handleNumberChange}/></div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
     </>
   )
 }
@@ -34,7 +48,10 @@ const Header = (props) => {
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '045-2275961'}
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -53,41 +70,23 @@ const App = () => {
     setNewNumber('')
   }
 
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
-
-  const handleNumberChange = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
-  }
-
-  const handleNameFiltering = (event) => {
-    setFilter(event.target.value)
-  }
+  const personsToShow = filter.length === 0 ? persons : persons.filter(person =>
+    person.name.toLowerCase().includes(filter.toLowerCase()) || person.number.includes(filter))
 
   return (
     <div>
       <Header header="Phonebook"/>
-      <form>
-        <div> search: <input value={filter} onChange={handleNameFiltering}/></div>
-      </form>
+      <Search filter={filter} handleNameFiltering={(event) => setFilter(event.target.value)}/>
       <Header header="Add New Phone Number"/>
-      <form onSubmit={addPerson}>
-        <div> name: <input value={newName} onChange={handleNameChange}/></div>
-        <div> number: <input value={newNumber} onChange={handleNumberChange}/></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm handleSubmit={addPerson} name={newName} 
+                  handleNameChange={(event) => setNewName(event.target.value)}
+                  number={newNumber}
+                  handleNumberChange={(event) => setNewNumber(event.target.value)} />
       <Header header="Phone Numbers"/>
-      <Content persons={persons} filter={filter}/>
+      <Persons personsList={personsToShow}/>
     </div>
   )
 
 }
 
 export default App
-
-//TODO: Siirrä filtteröinti App:iin!!!
