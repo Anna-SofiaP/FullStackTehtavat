@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 
-const Person = ({ name, number }) => {
+//TODO: Korjaa ohjelma niin että se osaa poistaa henkilön puhelinluettelosta.
+//HUOM! Pitää keksiä tapa viedä handleDeleting-funktiolle tieto siitä, mikä henkilö poistetaan, eli henkilön id.
+
+const Person = ({ name, number, handleClick }) => {
   return (
     <>
-      <p>{name} {number}</p>
+      <p>{name} {number} <button onClick={handleClick}>delete</button> </p>
     </>
   )
 }
 
-const Persons = ({ personsList }) => {
+const Persons = ({ personsList, handleClick }) => {
   return (
     <>
-      {personsList.map(person => <Person key={person.name} name={person.name} number={person.number}/> )}
+      {personsList.map(person => <Person key={person.id} name={person.name} number={person.number}
+        handleClick={handleClick}/> )}
     </>
   )
 }
@@ -55,8 +60,8 @@ const App = () => {
 
   const hook = () => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)
@@ -67,15 +72,28 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    const nameObject = { name: newName, number: newNumber }
+
     if (persons.some(person => person.name === newName)) {
       window.alert(`${newName} is already added to phonebook`)
     }
     else {
-      const nameObject = { name: newName, number: newNumber }
-      setPersons(persons.concat(nameObject))
+      //console.log('päästiinkö tänne?')
+      personService
+        .create(nameObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+        })
     }
     setNewName('')
     setNewNumber('')
+  }
+
+  const handleDeleting = (event) => {
+    console.log(event.target.value)
+    axios
+      .delete(`http://localhost:3001/persons/${person.id}`)
+      .then
   }
 
   const personsToShow = filter.length === 0 ? persons : persons.filter(person =>
@@ -86,12 +104,13 @@ const App = () => {
       <Header header="Phonebook"/>
       <Search filter={filter} handleNameFiltering={(event) => setFilter(event.target.value)}/>
       <Header header="Add New Phone Number"/>
-      <PersonForm handleSubmit={addPerson} name={newName} 
+      <PersonForm handleSubmit={addPerson} 
+                  name={newName} 
                   handleNameChange={(event) => setNewName(event.target.value)}
                   number={newNumber}
                   handleNumberChange={(event) => setNewNumber(event.target.value)} />
       <Header header="Phone Numbers"/>
-      <Persons personsList={personsToShow}/>
+      <Persons personsList={personsToShow} handleClick={handleDeleting}/>
     </div>
   )
 
