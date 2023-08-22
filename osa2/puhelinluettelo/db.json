@@ -1,26 +1,6 @@
 {
   "persons": [
     {
-      "id": 1,
-      "name": "Arto Hellas",
-      "number": "040-123456"
-    },
-    {
-      "id": 2,
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523"
-    },
-    {
-      "id": 3,
-      "name": "Dan Abramov",
-      "number": "12-43-234345"
-    },
-    {
-      "id": 4,
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122"
-    },
-    {
       "name": "Minni Hiiri",
       "number": "128474179",
       "id": 5
@@ -29,6 +9,16 @@
       "name": "Mikki Hiiri",
       "number": "12389576",
       "id": 6
+    },
+    {
+      "name": "Margaret Swann",
+      "number": "032-238571",
+      "id": 7
+    },
+    {
+      "name": "Bryan Birk",
+      "number": "23-1233928",
+      "id": 9
     }
   ]
 }
