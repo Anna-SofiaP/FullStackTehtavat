@@ -2,25 +2,26 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
 
-//TODO: Korjaa ohjelma niin että se osaa poistaa henkilön puhelinluettelosta.
-//HUOM! Pitää keksiä tapa viedä handleDeleting-funktiolle tieto siitä, mikä henkilö poistetaan, eli henkilön id.
+const Person = ({ id, name, number, handleClick }) => {
+  const clickHandler = ( id, event ) => {
+    handleClick(id, event)
+  }
 
-const Person = ({ name, number }) => {
   return (
-    <>
-      <p>{name} {number}</p>
-    </>
+    <div key={id}>
+      <p>{name} {number} <button onClick={(event) => clickHandler(id, event)}>delete</button> </p>
+    </div>
   )
 }
 
-/*const Persons = ({ personsList, handleClick }) => {
+const Persons = ({ personsList, handleClick }) => {
   return (
-    <>
-      {personsList.map(person => <Person key={person.id} name={person.name} number={person.number}
-        handleClick={handleClick}/> )}
-    </>
+    <div>
+      {personsList.map(person => <Person key={person.id} id={person.id} name={person.name} number={person.number}
+      handleClick={handleClick}/> )}
+    </div>
   )
-}*/
+}
 
 const Search = ({ filter, handleNameFiltering }) => {
   return (
@@ -70,12 +71,26 @@ const App = () => {
   
   useEffect(hook, [])
 
-  const addPerson = (event) => {
+  const addOrUpdatePerson = (event) => {
     event.preventDefault()
+
     const nameObject = { name: newName, number: newNumber }
 
     if (persons.some(person => person.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook. 
+        Do you want to replace the old number with a new one?`)) {
+        const personToEdit = persons.find(person => person.name === newName)
+        const personId = personToEdit.id
+        const index = persons.findIndex(person => person.id === personId)
+        personToEdit.number = newNumber
+        personService
+          .update(personId, personToEdit)
+          .then(() => {
+            const updatedPersons = [...persons]
+            updatedPersons[index] = personToEdit
+            setPersons(updatedPersons)
+          })
+      }
     }
     else {
       personService
@@ -88,15 +103,17 @@ const App = () => {
     setNewNumber('')
   }
 
-  const handleDeleting = ( id, event ) => {
+  const handleDeleting = ( key, event ) => {
     event.preventDefault()
-    axios
-      .delete(`http://localhost:3001/persons/${id}`)
-      .then(() => {
-        const newPersons = persons.filter( person => person.id !== id )
-        setPersons(newPersons)
-        console.log(newPersons)
-      })
+    const personToDelete = persons.find(person => person.id === key)
+    if (window.confirm(`Delete ${personToDelete.name} ?`)) {
+      personService
+        .remove(key)
+        .then(() => {
+          const newPersons = persons.filter( person => person.id !== key )
+          setPersons(newPersons)
+        })
+    }
   }
 
   const personsToShow = filter.length === 0 ? persons : persons.filter(person =>
@@ -104,23 +121,17 @@ const App = () => {
 
   return (
     <div>
-      <Header header="Phonebook"/>
-      <Search filter={filter} handleNameFiltering={(event) => setFilter(event.target.value)}/>
-      <Header header="Add New Phone Number"/>
-      <PersonForm handleSubmit={addPerson} 
-                  name={newName} 
-                  handleNameChange={(event) => setNewName(event.target.value)}
-                  number={newNumber}
-                  handleNumberChange={(event) => setNewNumber(event.target.value)} />
-      <Header header="Phone Numbers"/>
-      {personsToShow.map(person => { return (
-        <>
-          <Person key={person.id} name={person.name} number={person.number}/>
-          <button onClick={(event) => handleDeleting(person.id, event)}>delete</button>
-        </>
-        )}
-      )}
-    </div>
+    <Header header="Phonebook"/>
+    <Search filter={filter} handleNameFiltering={(event) => setFilter(event.target.value)}/>
+    <Header header="Add New Phone Number"/>
+    <PersonForm handleSubmit={addOrUpdatePerson} 
+                name={newName} 
+                handleNameChange={(event) => setNewName(event.target.value)}
+                number={newNumber}
+                handleNumberChange={(event) => setNewNumber(event.target.value)} />
+    <Header header="Phone Numbers"/>
+    <Persons personsList={personsToShow} handleClick={handleDeleting}/>
+  </div>
   )
 
 }
