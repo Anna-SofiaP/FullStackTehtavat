@@ -1,0 +1,19 @@
+.notError {
+    color: rgb(0, 188, 0);
+    background: rgb(234, 234, 234);
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+.error {
+    color: rgb(188, 0, 0);
+    background: rgb(234, 234, 234);
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}

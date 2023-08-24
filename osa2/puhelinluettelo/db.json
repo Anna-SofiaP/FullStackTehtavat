@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Minni Hiiri",
-      "number": "334-3278357",
+      "number": "355-88744080",
       "id": 5
     },
     {
@@ -19,11 +19,6 @@
       "name": "Bryan Birk",
       "number": "23-1233928",
       "id": 9
-    },
-    {
-      "name": "Marja Mansikka",
-      "number": "283-3295922",
-      "id": 10
     }
   ]
 }

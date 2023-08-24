@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
+import './index.css'
 
 const Person = ({ id, name, number, handleClick }) => {
   const clickHandler = ( id, event ) => {
@@ -47,6 +47,26 @@ const PersonForm = ({ handleSubmit, name, handleNameChange, number, handleNumber
   )
 }
 
+const Notification = ({ message, isError }) => {
+  if (message === null) {
+    return null
+  }
+  if (isError === true) {
+    return (
+      <div className='error'>
+        {message}
+      </div>
+    )
+  }
+  else {
+    return (
+      <div className='notError'>
+        {message}
+      </div>
+    )
+  }
+}
+
 const Header = (props) => {
   return (
     <h2>{props.header}</h2>
@@ -58,6 +78,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
+  const [isError, setIsError] = useState(false)
 
   const hook = () => {
     console.log('effect')
@@ -86,9 +108,14 @@ const App = () => {
         personService
           .update(personId, personToEdit)
           .then(() => {
+            setNotification(`${personToEdit.name}'s number has been changed`)
             const updatedPersons = [...persons]
             updatedPersons[index] = personToEdit
             setPersons(updatedPersons)
+          })
+          .catch(() => {
+            setIsError(true)
+            setNotification(`${personToEdit.name} has already been deleted from the server`)
           })
       }
     }
@@ -96,11 +123,18 @@ const App = () => {
       personService
         .create(nameObject)
         .then(response => {
+          setNotification(`${nameObject.name} has been added to Phonebook`)
           setPersons(persons.concat(response.data))
         })
     }
+
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+
     setNewName('')
     setNewNumber('')
+    setIsError(false)
   }
 
   const handleDeleting = ( key, event ) => {
@@ -110,6 +144,10 @@ const App = () => {
       personService
         .remove(key)
         .then(() => {
+          setNotification(`${personToDelete.name} has been deleted from Phonebook`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
           const newPersons = persons.filter( person => person.id !== key )
           setPersons(newPersons)
         })
@@ -124,6 +162,7 @@ const App = () => {
     <Header header="Phonebook"/>
     <Search filter={filter} handleNameFiltering={(event) => setFilter(event.target.value)}/>
     <Header header="Add New Phone Number"/>
+    <Notification message={notification} isError={isError}/>
     <PersonForm handleSubmit={addOrUpdatePerson} 
                 name={newName} 
                 handleNameChange={(event) => setNewName(event.target.value)}
