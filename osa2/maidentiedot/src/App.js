@@ -4,20 +4,32 @@ import axios from 'axios'
 const App = () => {
   const [countries, setCountries] = useState({})
   const [country, setCountry] = useState(null)
+  const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    console.log('effect run, currency is now', currency)
-
-    // skip if currency is not defined
-    if (currency) {
-      console.log('fetching exchange rates...')
+    // skip if filter is not defined
+    if (filter) {
       axios
-        .get(`https://open.er-api.com/v6/latest/${currency}`)
+        .get('http://localhost:3001/countries')
         .then(response => {
-          setRates(response.data.rates)
+          setCountries(response.data)
         })
     }
-  }, [currency])
+  }, [country])
+
+  const handleSearch = (event) => {
+    event.preventDefault()
+    const newFilter = event.target.value
+    setFilter(newFilter)
+  }
+
+  return (
+    <div>
+      <form>
+        Search for Country: <input value={filter} onChange={handleSearch} />
+      </form>
+    </div>
+  )
 
 }
 
