@@ -2,20 +2,29 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const App = () => {
-  const [countries, setCountries] = useState({})
+  const [countries, setCountries] = useState(axios
+    .get('https://studies.cs.helsinki.fi/restcountries/api/all')
+    .then(response => console.log(response.data)))
   const [country, setCountry] = useState(null)
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    // skip if filter is not defined
     if (filter) {
-      axios
-        .get('http://localhost:3001/countries')
-        .then(response => {
-          setCountries(response.data)
-        })
+      console.log(countries)
+      
     }
-  }, [country])
+    /*axios
+      .get('https://studies.cs.helsinki.fi/restcountries/api/all')
+      .then(response => {
+        console.log(response)
+        console.log(response.data)
+        const newCountries = response.data
+        setCountries(newCountries)
+        const filteredCountries = newCountries.filter(country => 
+          country.name.common.toLowerCase().includes(filter.toLowerCase))
+      })
+    //const filteredCountries = newCountries.filter(country => country.common)*/
+  }, [])
 
   const handleSearch = (event) => {
     event.preventDefault()
