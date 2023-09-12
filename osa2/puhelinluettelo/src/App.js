@@ -81,18 +81,16 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState(null)
   const [isError, setIsError] = useState(false)
-
-  const hook = () => {
-    console.log('effect')
-    personService
-      .getAll()
-      .then(response => {
-        console.log('promise fulfilled', response)
-        setPersons(response.data)
-      })
-  }
   
-  useEffect(hook, [])
+  useEffect(() => {
+      console.log('effect')
+      personService
+        .getAll()
+        .then(response => {
+          console.log('promise fulfilled', response)
+          setPersons(response.data)
+        })
+    }, [])
 
   const addOrUpdatePerson = (event) => {
     event.preventDefault()
