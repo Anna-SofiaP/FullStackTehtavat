@@ -15,6 +15,7 @@ const Person = ({ id, name, number, handleClick }) => {
 }
 
 const Persons = ({ personsList, handleClick }) => {
+  console.log(personsList)
   return (
     <div>
       {personsList.map(person => <Person key={person.id} id={person.id} name={person.name} number={person.number}
