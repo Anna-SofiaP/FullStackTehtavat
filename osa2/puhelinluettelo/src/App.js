@@ -7,6 +7,8 @@ const Person = ({ id, name, number, handleClick }) => {
     handleClick(id, event)
   }
 
+  //testi
+
   return (
     <div key={id}>
       <p>{name} {number} <button onClick={(event) => clickHandler(id, event)}>delete</button> </p>
