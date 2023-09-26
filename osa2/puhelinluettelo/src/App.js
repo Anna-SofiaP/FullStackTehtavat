@@ -7,7 +7,7 @@ const Person = ({ id, name, number, handleClick }) => {
     handleClick(id, event)
   }
 
-  //testi
+  console.log(id, typeof id)
 
   return (
     <div key={id}>
