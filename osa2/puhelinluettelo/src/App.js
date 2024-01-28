@@ -127,6 +127,12 @@ const App = () => {
           setNotification(`${nameObject.name} has been added to Phonebook`)
           setPersons(persons.concat(response.data))
         })
+        .catch(error => {
+          console.log(error.response.data)
+          setIsError(true)
+          const errMessage = error.response.data.error
+          setNotification(JSON.stringify(errMessage))
+        })
     }
 
     setTimeout(() => {
