@@ -7,7 +7,7 @@ const Person = ({ id, name, number, handleClick }) => {
     handleClick(id, event)
   }
 
-  console.log(id, typeof id)
+  //console.log(id, typeof id)
 
   return (
     <div key={id}>
@@ -17,7 +17,7 @@ const Person = ({ id, name, number, handleClick }) => {
 }
 
 const Persons = ({ personsList, handleClick }) => {
-  console.log(personsList)
+  //console.log(personsList)
   return (
     <div>
       {personsList.map(person => <Person key={person.id} id={person.id} name={person.name} number={person.number}
@@ -111,12 +111,21 @@ const App = () => {
           .then(() => {
             setNotification(`${personToEdit.name}'s number has been changed`)
             const updatedPersons = [...persons]
+            console.log('person is about to be updated')
             updatedPersons[index] = personToEdit
             setPersons(updatedPersons)
           })
-          .catch(() => {
+          .catch((error) => {
             setIsError(true)
-            setNotification(`${personToEdit.name} has already been deleted from the server`)
+            const errorMessage = error.response.data.error
+            console.log('catch-part. error happened.')
+            //console.log('error message:', errorMessage, typeof(errorMessage))
+            //console.log(error.name)
+            if (error.name === 'AxiosError') {
+              setNotification(errorMessage)
+            } else {
+              setNotification(`${personToEdit.name} has already been deleted from the server`)
+            }
           })
       }
     }
